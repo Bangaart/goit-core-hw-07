@@ -30,7 +30,7 @@ class Birthday(Field):
     def __init__(self, value):
         super().__init__(value)
         try:
-            self.value = datetime.strptime(value, "%d.%m.%Y").date()
+            self.value = datetime.strptime(value, "%d.%m.%Y").date().strftime("%d.%m.%Y")
         except ValueError:
             raise ValueError("Invalid date format.Use DD.MM.YYYY")
 
@@ -84,12 +84,15 @@ class AddressBook(UserDict):
 
     def get_upcoming_birthdays(self, days = 7):
         upcoming_birthdays = []
-        today = date.today()
+        today = datetime.today()
 
         for name, record in self.data.items():
-            birthday_this_year = record.birthday.value.replace(year=today.year)
+            if not record.birthday or not record.birthday.value:
+                continue
+            birthday_in_date_format = datetime.strptime(record.birthday.value, "%d.%m.%Y")
+            birthday_this_year = birthday_in_date_format.replace(year=today.year)
             if birthday_this_year < today:
-                birthday_this_year = record.birthday.value.replace(year=today.year + 1)
+                birthday_this_year = birthday_in_date_format.replace(year=today.year + 1)
 
             """
             Додайте на цьому місці перевірку, чи не буде 
