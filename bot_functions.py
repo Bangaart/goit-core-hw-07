@@ -69,7 +69,7 @@ def add_birthday(args, book: AddressBook):
         return message
 
 @input_error
-def show_birthday(args: str, book: AddressBook) -> Birthday(date)|str:
+def show_birthday(args: str, book: AddressBook):
     name , *_ = args
     record : Record = book.find(name)
     if record:
